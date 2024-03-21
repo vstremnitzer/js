@@ -50,10 +50,7 @@ const createCookieStorageFromEvent = (event: RequestEvent) => {
         event.cookies.set(name, value, options);
       },
     },
-    {
-      headers: event.request.headers,
-      url: event.url.href,
-    }
+    false
   );
 };
 

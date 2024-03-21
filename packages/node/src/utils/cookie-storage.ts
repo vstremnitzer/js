@@ -34,7 +34,7 @@ export class CookieStorage implements Storage<PersistKey> {
       httpOnly: true,
       path: '/',
       sameSite: 'lax',
-      secure: this.#isSecure,
+      secure: this.isSecure,
       maxAge: 14 * 24 * 3600, // 14 days
     } satisfies Readonly<CookieSerializeOptions & { path: string }>);
   }
@@ -49,18 +49,14 @@ export class CookieStorage implements Storage<PersistKey> {
 
   protected sessionData: SessionData = {};
   protected saveQueue = new PromiseQueue();
-  #isSecure: boolean;
 
   constructor(
     public config: CookieConfig,
-    request: PartialRequest
+    private readonly isSecure: boolean
   ) {
     if (!config.encryptionKey) {
       throw new TypeError('The `encryptionKey` string is required for `CookieStorage`');
     }
-
-    this.#isSecure =
-      request.headers.get('x-forwarded-proto') === 'https' || request.url.startsWith('https');
   }
 
   async init() {

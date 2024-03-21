@@ -128,7 +128,8 @@ export const handleLogto = (
         getCookie: (...args) => event.cookies.get(...args),
         ...cookieConfig,
       },
-      event.request
+      event.request.headers.get('x-forwarded-proto') === 'https' ||
+        event.request.url.startsWith('https')
     );
     await storage.init();
 
